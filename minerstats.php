@@ -29,7 +29,7 @@ $sum = 0;
 $unsum = 0;
 
 
-$coins = array(
+$main_coins = array(
 	'bitcoin' => 'BTC',
 	'ethereum' => 'ETH',
 	'monero' => 'XMR',
@@ -232,18 +232,18 @@ foreach ($coin_data as $coin_datum) {
 				foreach ($coin_data as $coin) {
 					?>
                     <tr>
-                        <td <?php if (array_key_exists($coin->coin, $coins)) {
+                        <td <?php if (array_key_exists($coin->coin, $main_coins)) {
 							echo 'class="info"';
 						} ?>>
                             <span <?php if (array_key_exists($coin->coin, $thresholds) && $coin->confirmed >= $thresholds["$coin->coin"]) {
 	                            echo 'style="font-weight: bold; color: red;"';
                             } ?> ><?php echo $coin->coin; ?></span></td>
-                        <td <?php if (array_key_exists($coin->coin, $coins)) {
+                        <td <?php if (array_key_exists($coin->coin, $main_coins)) {
 							echo 'class="info"';
-						} ?>><?php echo $coin->confirmed; ?><?php if (array_key_exists($coin->coin, $coins)) {
+						} ?>><?php echo $coin->confirmed; ?><?php if (array_key_exists($coin->coin, $main_coins)) {
 								echo " (" . number_format(100 * $coin->confirmed / $thresholds["$coin->coin"], 0) . "%)";
 							} ?></td>
-                        <td <?php if (array_key_exists($coin->coin, $coins)) {
+                        <td <?php if (array_key_exists($coin->coin, $main_coins)) {
 							echo 'class="info"';
 						} ?>><?php echo $coin->unconfirmed; ?></td>
                         <td <?php if ($coin->confirmed_value > 0) {
