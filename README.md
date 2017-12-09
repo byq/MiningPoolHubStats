@@ -11,6 +11,12 @@ Simply load this anywhere on a web server with PHP.
 
 _example: minerstats.php?api_key=THIS_IS_MY_API_KEY_
 
+3. I have also created a web page for every one to use
+
+(For USD conversion) http://miningpoolhubstats.mindbrite.com/USD/API_KEY_GOES_HERE
+
+(For EURO conversion) http://miningpoolhubstats.mindbrite.com/EUR/API_KEY_GOES_HERE
+
 
 
 If this helps you in any way and you feel so inclined to donate something, I won't say no :)
