@@ -23,7 +23,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //You can get your API Key Here:
 //https://miningpoolhub.com/?page=account&action=edit
 
-$api_key = "INSERT_YOUR_API_KEY_HERE";
+define(API_KEY, "INSERT_YOUR_API_KEY_HERE");
+
+if($_GET['api_key'] != null){
+    $api_key = $_GET['api_key'];
+} else {
+    $api_key = API_KEY;
+}
 
 $sum = 0;
 $unsum = 0;
