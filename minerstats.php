@@ -263,9 +263,7 @@ foreach ($coin_data as $coin_datum) {
                             <span <?php if ($coin->confirmed >= $all_coins->{$coin->coin}->min_payout) {
 	                            echo 'style="font-weight: bold; color: red;"';
                             } ?> ><?php echo $coin->coin; ?></span></td>
-                        <td <?php if (array_key_exists($coin->coin, $payout_coins)) {
-							echo 'class="info"';
-						} ?>><?php echo $coin->confirmed; ?><?php echo " (" . number_format(100 * $coin->confirmed / $all_coins->{$coin->coin}->min_payout, 0) . "%)"; ?></td>
+                        <td><?php echo $coin->confirmed; ?><?php echo " (" . number_format(100 * $coin->confirmed / $all_coins->{$coin->coin}->min_payout, 0) . "%)"; ?></td>
                         <td <?php if (array_key_exists($coin->coin, $payout_coins)) {
 							echo 'class="info"';
 						} ?>><?php echo $coin->unconfirmed; ?></td>
