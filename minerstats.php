@@ -1,90 +1,109 @@
 <?php
+//error_reporting(E_ERROR);
+//ini_set('display_errors', 1);
 /**
-Copyright (C) 2017  James Dimitrov (Jimok82)
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ * Copyright (C) 2017  James Dimitrov (Jimok82)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  *
  */
 
+//EDIT BELOW THIS LINE!!!
+
 //SET API KEY HERE
 //You can get your API Key Here:
 //https://miningpoolhub.com/?page=account&action=edit
+$api_key = "INSERT_YOUR_API_KEY_HERE";
 
-define(API_KEY, "INSERT_YOUR_API_KEY_HERE");
+//Set FIAT code if you like (USD, EUR, GBP, etc.)
+$fiat = "SET_FIAT_CODE_HERE";
 
-if($_GET['api_key'] != null){
-    $api_key = $_GET['api_key'];
-} else {
-    $api_key = API_KEY;
+//DO NOT EDIT BELOW THIS LINE!!!
+
+
+//Check to see we have an API key. Show an error if none is defined.
+if ($_GET['api_key'] != null) {
+	$api_key = $_GET['api_key'];
+}
+if ($api_key == null || $api_key == "INSERT_YOUR_API_KEY_HERE" || strlen($api_key) <= 32) {
+	die("Please enter an API key: example: " . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?api_key=ENTER_YOUR_KEY_HERE");
 }
 
-$sum = 0;
-$unsum = 0;
+//Check to see what we are converting to. Default to USD
+if ($_GET['fiat'] != null) {
+	$fiat = $_GET['fiat'];
+}
+if ($fiat == "SET_FIAT_CODE_HERE") {
+	$fiat = "USD";
+}
 
-
-$main_coins = array(
-	'bitcoin' => 'BTC',
-	'ethereum' => 'ETH',
-	'monero' => 'XMR',
-);
-
-$thresholds = array(
-	'bitcoin' => '0.002',
-	'ethereum' => '0.01',
-	'monero' => '0.05'
-);
-
-$all_coins = array(
-	'bitcoin' => 'BTC',
-	'ethereum' => 'ETH',
-	'monero' => 'XMR',
-	'zcash' => 'ZEC',
-	'vertcoin' => 'VTC',
-	'feathercoin' => 'FTC',
-	'digibyte-skein' => 'DGB',
-	'musicoin' => 'MUSIC',
-	'ethereum-classic' => 'ETC',
-	'siacoin' => 'SC',
-	'zcoin' => 'XZC',
-	'bitcoin-gold' => 'BTG',
-	'zencash' => 'ZEN'
-);
-
-$ch = curl_init("https://miningpoolhub.com/index.php?page=api&action=getuserallbalances&api_key=" . $api_key);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-$output = curl_exec($ch);
-curl_close($ch);
-$result = json_decode($output);
-
-$ch = curl_init("https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,FTC,DGB,VTC,ZEN,MUSIC,ETC,ZEC,XMR,SC,XZC,BTG&tsyms=USD");
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-$output = curl_exec($ch);
-curl_close($ch);
-$prices = json_decode($output);
-
-
+//Initialize some variables
+$sum_of_confirmed = 0;
+$sum_of_unconfirmed = 0;
+$confirmed_total = 0;
+$unconfirmed_total = 0;
 $coin_data = array();
 $worker_data = array();
+
+//Define the coin codes and minimum payout thresholds for all coins
+$all_coins = (object)array(
+	'bitcoin' => (object)array('code' => 'BTC', 'min_payout' => '0.002'),
+	'ethereum' => (object)array('code' => 'ETH', 'min_payout' => '0.01'),
+	'monero' => (object)array('code' => 'XMR', 'min_payout' => '0.05'),
+	'zcash' => (object)array('code' => 'ZEC', 'min_payout' => '0.002'),
+	'vertcoin' => (object)array('code' => 'VTC', 'min_payout' => '0.1'),
+	'feathercoin' => (object)array('code' => 'FTC', 'min_payout' => '0.002'),
+	'digibyte-skein' => (object)array('code' => 'DGB', 'min_payout' => '0.01'),
+	'musicoin' => (object)array('code' => 'MUSIC', 'min_payout' => '0.002'),
+	'ethereum-classic' => (object)array('code' => 'ETC', 'min_payout' => '0002'),
+	'siacoin' => (object)array('code' => 'SC', 'min_payout' => '0.002'),
+	'zcoin' => (object)array('code' => 'XZC', 'min_payout' => '0.002'),
+	'bitcoin-gold' => (object)array('code' => 'BTG', 'min_payout' => '0.002'),
+	'zencash' => (object)array('code' => 'ZEN', 'min_payout' => '0.002'),
+	'litecoin' => (object)array('code' => 'LTC', 'min_payout' => '0.002'),
+	'monacoin' => (object)array('code' => 'MONA', 'min_payout' => '0.1'),
+	'groestlcoin' => (object)array('code' => 'GRS', 'min_payout' => '0.002')
+);
+
+function make_api_call($url)
+{
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	$output = curl_exec($ch);
+	curl_close($ch);
+	return json_decode($output);
+}
+
+//Make the main API call
+$result = make_api_call("https://miningpoolhub.com/index.php?page=api&action=getuserallbalances&api_key=" . $api_key);
+
+
+//Set up the conversion string for all coins we need from the cryptocompare API
+$all_coin_list = array();
+foreach ($all_coins as $coin) {
+	$all_coin_list[] = $coin->code;
+}
+$all_coin_string = implode(",", $all_coin_list);
+
+//Make the conversion rate API call
+$prices = make_api_call("https://min-api.cryptocompare.com/data/pricemulti?fsyms=" . $all_coin_string . "&tsyms=" . $fiat);
+
+
+//Main loop - Get all the coin info we can get
 foreach ($result->getuserallbalances->data as $row) {
-
-	$last_hour_stats_for_coin = json_decode($last_hour_stats->payload);
-	$last_day_stats_for_coin = json_decode($last_day_stats->payload);
-
-	$last_hour_data = $last_hour_stats_for_coin->{$row->coin};
-	$last_day_data = $last_day_stats_for_coin->{$row->coin};
 
 	$coin = (object)array();
 
@@ -93,12 +112,13 @@ foreach ($result->getuserallbalances->data as $row) {
 	$coin->unconfirmed = number_format($row->unconfirmed + $row->ae_unconfirmed, 8);
 
 
+	//If a conversion rate was returned by API, set it
 	foreach ($prices as $price) {
 		if (key_exists($row->coin, $all_coins)) {
 
-			$code = $all_coins["$row->coin"];
+			$code = $all_coins->{$row->coin}->code;
 
-			$price = $prices->{$code}->USD;
+			$price = $prices->{$code}->{$fiat};
 
 			$coin->confirmed_value = number_format($price * $coin->confirmed, 2);
 			$coin->unconfirmed_value = number_format($price * $coin->unconfirmed, 2);
@@ -107,16 +127,15 @@ foreach ($result->getuserallbalances->data as $row) {
 
 	}
 
+	//Add the coin data into the main array we build the table with
 	$coin_data[] = $coin;
 
-	$ch = curl_init("https://" . $row->coin . ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=".$api_key);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	$output = curl_exec($ch);
-	curl_close($ch);
-	$workers = json_decode($output);
+	//Get all of the worker stats - Separate API call for each coin...gross...
+	$workers = make_api_call("https://" . $row->coin . ".miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=" . $api_key);
 
+
+	//Get the stats for every active worker with hashrate > 0
 	$worker_list = $workers->getuserworkers->data;
-
 	$active_workers = array();
 	foreach ($worker_list as $worker) {
 		if ($worker->hashrate != 0) {
@@ -127,14 +146,14 @@ foreach ($result->getuserallbalances->data as $row) {
 
 }
 
-$confirmed_total = 0;
-$unconfirmed_total = 0;
-
+//Sum up the totals by traversing the coin data loop and summing everything up
 foreach ($coin_data as $coin_datum) {
 	$confirmed_total += $coin_datum->confirmed_value;
 	$unconfirmed_total += $coin_datum->unconfirmed_value;
 }
 
+
+//GENERATE THE UI HERE
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -228,36 +247,42 @@ foreach ($coin_data as $coin_datum) {
             <table class="table table-bordered table-striped">
                 <tr>
                     <th>Coin</th>
-                    <th>Confirmed</th>
+                    <th>Confirmed (% of min payout)</th>
                     <th>Unconfirmed</th>
+                    <th>Total</th>
                     <th>Value (Conf.)</th>
                     <th>Value (Unconf.)</th>
+                    <th>Value (Total)</th>
                 </tr>
 				<?php
 
 				foreach ($coin_data as $coin) {
 					?>
                     <tr>
-                        <td <?php if (array_key_exists($coin->coin, $main_coins)) {
+                        <td <?php if (array_key_exists($coin->coin, $payout_coins)) {
 							echo 'class="info"';
 						} ?>>
-                            <span <?php if (array_key_exists($coin->coin, $thresholds) && $coin->confirmed >= $thresholds["$coin->coin"]) {
+                            <span <?php if ($coin->confirmed >= $all_coins->{$coin->coin}->min_payout) {
 	                            echo 'style="font-weight: bold; color: red;"';
                             } ?> ><?php echo $coin->coin; ?></span></td>
-                        <td <?php if (array_key_exists($coin->coin, $main_coins)) {
+                        <td <?php if (array_key_exists($coin->coin, $payout_coins)) {
 							echo 'class="info"';
-						} ?>><?php echo $coin->confirmed; ?><?php if (array_key_exists($coin->coin, $main_coins)) {
-								echo " (" . number_format(100 * $coin->confirmed / $thresholds["$coin->coin"], 0) . "%)";
-							} ?></td>
-                        <td <?php if (array_key_exists($coin->coin, $main_coins)) {
+						} ?>><?php echo $coin->confirmed; ?><?php echo " (" . number_format(100 * $coin->confirmed / $all_coins->{$coin->coin}->min_payout, 0) . "%)"; ?></td>
+                        <td <?php if (array_key_exists($coin->coin, $payout_coins)) {
 							echo 'class="info"';
 						} ?>><?php echo $coin->unconfirmed; ?></td>
+                        <td <?php if (array_key_exists($coin->coin, $payout_coins)) {
+							echo 'class="info"';
+						} ?>><?php echo number_format($coin->confirmed + $coin->unconfirmed, 8); ?></td>
                         <td <?php if ($coin->confirmed_value > 0) {
 							echo 'class="success"';
-						} ?>>$<?php echo number_format($coin->confirmed_value, 2); ?></td>
+						} ?>><?php echo number_format($coin->confirmed_value, 2) . " " . $fiat; ?></td>
                         <td <?php if ($coin->unconfirmed_value > 0) {
 							echo 'class="success"';
-						} ?>>$<?php echo number_format($coin->unconfirmed_value, 2); ?></td>
+						} ?>><?php echo number_format($coin->unconfirmed_value, 2) . " " . $fiat; ?></td>
+                        <td <?php if ($coin->unconfirmed_value > 0) {
+							echo 'class="success"';
+						} ?>><?php echo number_format($coin->confirmed_value + $coin->unconfirmed_value, 2) . " " . $fiat; ?></td>
                     </tr>
 					<?php
 				}
@@ -266,8 +291,10 @@ foreach ($coin_data as $coin_datum) {
                     <td>TOTAL</td>
                     <td></td>
                     <td></td>
-                    <td>$<?php echo number_format($confirmed_total, 2); ?></td>
-                    <td>$<?php echo number_format($unconfirmed_total, 2); ?></td>
+                    <td></td>
+                    <td><?php echo number_format($confirmed_total, 2) . " " . $fiat; ?></td>
+                    <td><?php echo number_format($unconfirmed_total, 2) . " " . $fiat; ?></td>
+                    <td><?php echo number_format($confirmed_total + $unconfirmed_total, 2) . " " . $fiat; ?></td>
                 </tr>
             </table>
         </div>
@@ -286,7 +313,7 @@ foreach ($coin_data as $coin_datum) {
                         <td><?php echo $worker->username; ?></td>
                         <td><?php echo $worker->coin; ?></td>
                         <td><?php echo number_format($worker->hashrate, 2); ?></td>
-                        <td><?php echo $worker->monitor; ?></td>
+                        <td><?php echo $worker->monitor == 1 ? "Enabled" : "Disabled"; ?></td>
                     </tr>
 				<?php } ?>
             </table>
