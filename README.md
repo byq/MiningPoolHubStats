@@ -7,9 +7,9 @@ Simply load this anywhere on a web server with PHP.
 
 1. You have to add your API key from MiningPoolHub.com. You can get your API Key from your account settings on the MiningPoolHub web page.
 
-2. You can pass your API Key into the page as a variable:
+2. You can pass your API Key and the requested FIAT currency to convert to into the page as a variable:
 
-_example: minerstats.php?api_key=THIS_IS_MY_API_KEY_
+_example: minerstats.php?api_key=THIS_IS_MY_API_KEY_&amp;fiat=FIAT_CURRENCY_CODE
 
 3. I have also created a web page for every one to use
 
