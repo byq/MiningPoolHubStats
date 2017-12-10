@@ -25,4 +25,6 @@ If this helps you in any way and you feel so inclined to donate something, I won
 
 BTC: 17ZjS6ZJTCNWrd17kkZpgRHYZJjkq5qT5A
 
+LTC: LdGQgurUKH2J7iBBPcXWyLKUb8uUgXCfFF
+
 ETH: 0x6e259a08a1596653cbf66b2ae2c36c46ca123523
