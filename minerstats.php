@@ -259,9 +259,7 @@ foreach ($coin_data as $coin_datum) {
 				foreach ($coin_data as $coin) {
 					?>
                     <tr>
-                        <td <?php if (array_key_exists($coin->coin, $payout_coins)) {
-							echo 'class="info"';
-						} ?>>
+                        <td>
                             <span <?php if ($coin->confirmed >= $all_coins->{$coin->coin}->min_payout) {
 	                            echo 'style="font-weight: bold; color: red;"';
                             } ?> ><?php echo $coin->coin; ?></span></td>
