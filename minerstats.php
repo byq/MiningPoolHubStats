@@ -36,7 +36,7 @@ $fiat = "SET_FIAT_CODE_HERE";
 
 //Check to see we have an API key. Show an error if none is defined.
 if ($_GET['api_key'] != null) {
-	$api_key = $_GET['api_key'];
+	$api_key = filter_var($_GET['api_key'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 }
 if ($api_key == null || $api_key == "INSERT_YOUR_API_KEY_HERE" || strlen($api_key) <= 32) {
 	die("Please enter an API key: example: " . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?api_key=ENTER_YOUR_KEY_HERE");
@@ -44,7 +44,7 @@ if ($api_key == null || $api_key == "INSERT_YOUR_API_KEY_HERE" || strlen($api_ke
 
 //Check to see what we are converting to. Default to USD
 if ($_GET['fiat'] != null) {
-	$fiat = $_GET['fiat'];
+	$fiat = filter_var($_GET['fiat'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 }
 if ($fiat == "SET_FIAT_CODE_HERE") {
 	$fiat = "USD";
