@@ -46,7 +46,7 @@ if ($api_key == null || $api_key == "INSERT_YOUR_API_KEY_HERE" || strlen($api_ke
 if ($_GET['fiat'] != null) {
 	$fiat = filter_var($_GET['fiat'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 }
-if ($fiat == "SET_FIAT_CODE_HERE") {
+if ($fiat == "SET_FIAT_CODE_HERE" || strlen($fiat) >= 4) {
 	$fiat = "USD";
 }
 
