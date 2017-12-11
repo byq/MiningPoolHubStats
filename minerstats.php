@@ -334,7 +334,7 @@ foreach ($coin_data as $coin_datum) {
                 </tr>
 				<?php foreach ($worker_data as $worker) { ?>
                     <tr>
-                        <td><?php echo $worker->username; ?></td>
+                        <td><A target="_blank" HREF="https://<?php echo $worker->coin; ?>.miningpoolhub.com/index.php?page=account&action=workers"><?php echo $worker->username; ?></A></td>
                         <td><?php echo $worker->coin; ?></td>
                         <td><?php echo number_format($worker->hashrate, 2); ?></td>
                         <td><?php echo $worker->monitor == 1 ? "Enabled" : "Disabled"; ?></td>
