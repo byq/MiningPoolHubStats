@@ -334,7 +334,7 @@ foreach ($coin_data as $coin_datum) {
                     <th>Hashrate</th>
                     <th>Monitor</th>
                 </tr>
-				<?php $i=0; foreach ($worker_data as $worker) { ?>
+				<?php $i=1; foreach ($worker_data as $worker) { ?>
                     <tr>
                         <td width=1%><?php echo $i ?></td>
                         <td>
