@@ -86,6 +86,7 @@ $all_coins = (object)array(
 	'siacoin' => (object)array('code' => 'SC', 'min_payout' => '0.002'),
 	'zcoin' => (object)array('code' => 'XZC', 'min_payout' => '0.002'),
 	'bitcoin-gold' => (object)array('code' => 'BTG', 'min_payout' => '0.002'),
+	'bitcoin-cash' => (object)array('code' => 'BCH', 'min_payout' => '0.0005'),
 	'zencash' => (object)array('code' => 'ZEN', 'min_payout' => '0.002'),
 	'litecoin' => (object)array('code' => 'LTC', 'min_payout' => '0.002'),
 	'monacoin' => (object)array('code' => 'MONA', 'min_payout' => '0.1'),
