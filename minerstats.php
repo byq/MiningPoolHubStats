@@ -334,7 +334,7 @@ foreach ($coin_data as $coin_datum) {
                     <th>Hashrate</th>
                     <th>Monitor</th>
                 </tr>
-				<?php foreach ($worker_data as $worker) { ?>
+				<?php $i=0; foreach ($worker_data as $worker) { ?>
                     <tr>
                         <td width=1%><?php echo $i ?></td>
                         <td>
@@ -344,7 +344,7 @@ foreach ($coin_data as $coin_datum) {
                         <td><?php echo number_format($worker->hashrate, 2); ?></td>
                         <td><?php echo $worker->monitor == 1 ? "Enabled" : "Disabled"; ?></td>
                     </tr>
-				<?php } ?>
+				<?php $i++; } ?>
             </table>
         </div>
     </div>
