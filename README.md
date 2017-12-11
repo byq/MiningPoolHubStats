@@ -13,9 +13,9 @@ _example: minerstats.php?api_key=THIS_IS_MY_API_KEY_&amp;fiat=FIAT_CURRENCY_CODE
 
 3. I have also created a web page for every one to use
 
-(For USD conversion) http://miningpoolhubstats.mindbrite.com/USD/API_KEY_GOES_HERE
+(For USD conversion) https://miningpoolhubstats.com/USD/API_KEY_GOES_HERE
 
-(For EURO conversion) http://miningpoolhubstats.mindbrite.com/EUR/API_KEY_GOES_HERE
+(For EURO conversion) https://miningpoolhubstats.com/EUR/API_KEY_GOES_HERE
 
 
 
