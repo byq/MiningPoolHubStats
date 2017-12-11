@@ -58,7 +58,7 @@ if ($fiat == "SET_FIAT_CODE_HERE" || strlen($fiat) >= 4) {
 if ($_GET['crypto'] != null) {
 	$crypto = filter_var($_GET['crypto'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 }
-if ($crypto == "SET_CRYPTO_CODE_HERE" || strlen($crypto) >= 4) {
+if ($crypto == "SET_CRYPTO_CODE_HERE" || strlen($crypto) >= 5) {
 	$crypto = "ETH";
 }
 
