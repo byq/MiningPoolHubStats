@@ -1,27 +1,30 @@
 This is a simple stats page which will show your current confirmed and unconfirmed coins, their balance in USD, and your current workers on MiningPoolHub.com
 
-Simply load this anywhere on a web server with PHP. 
+**INSTALLATION**
 
+* Copy minerstats.php, miningpoolhubstats.class.php and config.php into your web space.
+* Update config.php to include your API key, selected FIAT currency for conversion and selected crypto for conversion
+* open /minerstats.php in a browser
 
-**There are two ways to use this page**
-
-1. You have to add your API key from MiningPoolHub.com. You can get your API Key from your account settings on the MiningPoolHub web page.
-
-2. You can pass your API Key and the requested FIAT currency to convert to into the page as a variable:
-
+Note: You can also pass the information via GET, for example:
+ 
 _example: minerstats.php?api_key=THIS_IS_MY_API_KEY_&amp;fiat=FIAT_CURRENCY_CODE
 
-3. I have also created a web page for every one to use
+**Please make sure to only edit the config.php file!**
+
+
+**FOR THOSE WITH NO EXPERIENCE WITH WEB SERVERS**
+
+I have also created a web page for every one to use
 
 (For USD conversion) https://miningpoolhubstats.com/USD/API_KEY_GOES_HERE
 
 (For EURO conversion) https://miningpoolhubstats.com/EUR/API_KEY_GOES_HERE
 
 
+**THIS IS AWESOME! I WANT TO HELP!**
 
 If this helps you in any way and you feel so inclined to donate something, I won't say no :)
-
-
 
 BTC: 17ZjS6ZJTCNWrd17kkZpgRHYZJjkq5qT5A
 
