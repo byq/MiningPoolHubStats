@@ -285,9 +285,9 @@ foreach ($coin_data as $coin_datum) {
 					?>
                     <tr>
                         <td>
-                            <span <?php if ($coin->confirmed >= $all_coins->{$coin->coin}->min_payout) {
-	                            echo 'style="font-weight: bold; color: red;"';
-                            } ?> ><A target="_blank" HREF="https://<?php echo $coin->coin; ?>.miningpoolhub.com/index.php?page=account&action=pooledit"><?php echo $coin->coin; ?></A></span></td>
+                            <a target="_blank" href="https://<?php echo $coin->coin; ?>.miningpoolhub.com/index.php?page=account&action=pooledit"><span <?php if ($coin->confirmed >= $all_coins->{$coin->coin}->min_payout) {
+									echo 'style="font-weight: bold; color: red;"';
+								} ?> ><?php echo $coin->coin; ?></span></a></td>
                         <td><?php echo $coin->confirmed; ?><?php echo " (" . number_format(100 * $coin->confirmed / $all_coins->{$coin->coin}->min_payout, 0) . "%)"; ?></td>
                         <td <?php if (array_key_exists($coin->coin, $payout_coins)) {
 							echo 'class="info"';
@@ -335,7 +335,9 @@ foreach ($coin_data as $coin_datum) {
                 </tr>
 				<?php foreach ($worker_data as $worker) { ?>
                     <tr>
-                        <td><A target="_blank" HREF="https://<?php echo $worker->coin; ?>.miningpoolhub.com/index.php?page=account&action=workers"><?php echo $worker->username; ?></A></td>
+                        <td>
+                            <A target="_blank" HREF="https://<?php echo $worker->coin; ?>.miningpoolhub.com/index.php?page=account&action=workers"><?php echo $worker->username; ?></A>
+                        </td>
                         <td><?php echo $worker->coin; ?></td>
                         <td><?php echo number_format($worker->hashrate, 2); ?></td>
                         <td><?php echo $worker->monitor == 1 ? "Enabled" : "Disabled"; ?></td>
