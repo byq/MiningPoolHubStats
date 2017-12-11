@@ -328,6 +328,7 @@ foreach ($coin_data as $coin_datum) {
         <div class="col-md-12">
             <table class="table table-bordered table-striped">
                 <tr>
+                    <th>#</th>
                     <th>Worker</th>
                     <th>Coin</th>
                     <th>Hashrate</th>
@@ -335,6 +336,7 @@ foreach ($coin_data as $coin_datum) {
                 </tr>
 				<?php foreach ($worker_data as $worker) { ?>
                     <tr>
+                        <td width=1%><?php echo $i ?></td>
                         <td>
                             <A target="_blank" HREF="https://<?php echo $worker->coin; ?>.miningpoolhub.com/index.php?page=account&action=workers"><?php echo $worker->username; ?></A>
                         </td>
