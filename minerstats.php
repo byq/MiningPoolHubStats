@@ -208,13 +208,15 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
         <div class="col-md-12">
             <table class="table table-bordered table-striped">
                 <tr>
+                    <th>#</th>
                     <th>Worker</th>
                     <th>Coin</th>
                     <th>Hashrate</th>
                     <th>Monitor</th>
                 </tr>
-				<?php foreach ($mph_stats->worker_data as $worker) { ?>
+				<?php $i=1; foreach ($mph_stats->worker_data as $worker) { ?>
                     <tr>
+                        <td width=1%><?php echo $i ?></td>
                         <td>
                             <A target="_blank" HREF="https://<?php echo $worker->coin; ?>.miningpoolhub.com/index.php?page=account&action=workers"><?php echo $worker->username; ?></A>
                         </td>
@@ -222,7 +224,7 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
                         <td><?php echo number_format($worker->hashrate, 2); ?></td>
                         <td><?php echo $worker->monitor == 1 ? "Enabled" : "Disabled"; ?></td>
                     </tr>
-				<?php } ?>
+				<?php $i++; } ?>
             </table>
         </div>
     </div>
