@@ -31,6 +31,10 @@ $api_key = "INSERT_YOUR_API_KEY_HERE";
 //Set FIAT code if you like (USD, EUR, GBP, etc.)
 $fiat = "SET_FIAT_CODE_HERE";
 
+//Set CRYPTO code if you like (BTC, ETH, etc.)
+$crypto = "SET_CRYPTO_CODE_HERE";
+
+
 //DO NOT EDIT BELOW THIS LINE!!!
 
 
@@ -50,11 +54,21 @@ if ($fiat == "SET_FIAT_CODE_HERE" || strlen($fiat) >= 4) {
 	$fiat = "USD";
 }
 
+//Check to see what we are converting to. Default to BTC
+if ($_GET['crypto'] != null) {
+	$crypto = filter_var($_GET['crypto'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+}
+if ($crypto == "SET_CRYPTO_CODE_HERE" || strlen($crypto) >= 4) {
+	$crypto = "ETH";
+}
+
 //Initialize some variables
 $sum_of_confirmed = 0;
 $sum_of_unconfirmed = 0;
 $confirmed_total = 0;
 $unconfirmed_total = 0;
+$confirmed_total_c = 0;
+$unconfirmed_total_c = 0;
 $coin_data = array();
 $worker_data = array();
 
@@ -99,7 +113,7 @@ foreach ($all_coins as $coin) {
 $all_coin_string = implode(",", $all_coin_list);
 
 //Make the conversion rate API call
-$prices = make_api_call("https://min-api.cryptocompare.com/data/pricemulti?fsyms=" . $all_coin_string . "&tsyms=" . $fiat);
+$prices = make_api_call("https://min-api.cryptocompare.com/data/pricemulti?fsyms=" . $all_coin_string . "&tsyms=" . $fiat . "," . $crypto);
 
 
 //Main loop - Get all the coin info we can get
@@ -118,10 +132,17 @@ foreach ($result->getuserallbalances->data as $row) {
 
 			$code = $all_coins->{$row->coin}->code;
 
+			//Get fiat prices
 			$price = $prices->{$code}->{$fiat};
 
 			$coin->confirmed_value = number_format($price * $coin->confirmed, 2);
 			$coin->unconfirmed_value = number_format($price * $coin->unconfirmed, 2);
+
+			//get crypto prices
+			$cprice = $prices->{$code}->{$crypto};
+
+			$coin->confirmed_value_c = number_format($cprice * $coin->confirmed, 8);
+			$coin->unconfirmed_value_c = number_format($cprice * $coin->unconfirmed, 8);
 
 		}
 
@@ -150,6 +171,8 @@ foreach ($result->getuserallbalances->data as $row) {
 foreach ($coin_data as $coin_datum) {
 	$confirmed_total += $coin_datum->confirmed_value;
 	$unconfirmed_total += $coin_datum->unconfirmed_value;
+	$confirmed_total_c += $coin_datum->confirmed_value_c;
+	$unconfirmed_total_c += $coin_datum->unconfirmed_value_c;
 }
 
 
@@ -250,6 +273,7 @@ foreach ($coin_data as $coin_datum) {
                     <th>Confirmed (% of min payout)</th>
                     <th>Unconfirmed</th>
                     <th>Total</th>
+                    <th>Total in <?php echo $crypto; ?></th>
                     <th>Value (Conf.)</th>
                     <th>Value (Unconf.)</th>
                     <th>Value (Total)</th>
@@ -270,6 +294,9 @@ foreach ($coin_data as $coin_datum) {
                         <td <?php if (array_key_exists($coin->coin, $payout_coins)) {
 							echo 'class="info"';
 						} ?>><?php echo number_format($coin->confirmed + $coin->unconfirmed, 8); ?></td>
+                        <td <?php if ($coin->unconfirmed_value > 0) {
+							echo 'class="success"';
+						} ?>><?php echo number_format($coin->confirmed_value_c + $coin->unconfirmed_value_c, 4) . " " . $crypto; ?></td>
                         <td <?php if ($coin->confirmed_value > 0) {
 							echo 'class="success"';
 						} ?>><?php echo number_format($coin->confirmed_value, 2) . " " . $fiat; ?></td>
@@ -288,6 +315,7 @@ foreach ($coin_data as $coin_datum) {
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td><?php echo number_format($confirmed_total_c + $unconfirmed_total_c, 4) . " " . $crypto; ?></td>
                     <td><?php echo number_format($confirmed_total, 2) . " " . $fiat; ?></td>
                     <td><?php echo number_format($unconfirmed_total, 2) . " " . $fiat; ?></td>
                     <td><?php echo number_format($confirmed_total + $unconfirmed_total, 2) . " " . $fiat; ?></td>
