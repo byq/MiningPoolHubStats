@@ -58,7 +58,7 @@ if ($fiat == "SET_FIAT_CODE_HERE" || strlen($fiat) >= 4) {
 if ($_GET['crypto'] != null) {
 	$crypto = filter_var($_GET['crypto'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 }
-if ($crypto == "SET_CRYPTO_CODE_HERE" || strlen($crypto) >= 4) {
+if ($crypto == "SET_CRYPTO_CODE_HERE" || strlen($crypto) >= 5) {
 	$crypto = "ETH";
 }
 
@@ -287,7 +287,7 @@ foreach ($coin_data as $coin_datum) {
                         <td>
                             <span <?php if ($coin->confirmed >= $all_coins->{$coin->coin}->min_payout) {
 	                            echo 'style="font-weight: bold; color: red;"';
-                            } ?> ><?php echo $coin->coin; ?></span></td>
+                            } ?> ><A target="_blank" HREF="https://<?php echo $coin->coin; ?>.miningpoolhub.com/index.php?page=account&action=pooledit"><?php echo $coin->coin; ?></A></span></td>
                         <td><?php echo $coin->confirmed; ?><?php echo " (" . number_format(100 * $coin->confirmed / $all_coins->{$coin->coin}->min_payout, 0) . "%)"; ?></td>
                         <td <?php if (array_key_exists($coin->coin, $payout_coins)) {
 							echo 'class="info"';
