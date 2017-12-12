@@ -146,6 +146,7 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
 </nav>
 <main role="main" class="container">
     <h1>MiningPoolHub Stats</h1>
+    <h3>24 Hr Earnings: <?php echo $mph_stats->daily_stats() . " " . $fiat; ?></h3>
     <div class="row">
         <div class="col-md-12">
             <table class="table table-bordered table-striped">
