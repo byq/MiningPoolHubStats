@@ -68,11 +68,10 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Miner Stats</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <style>
-        * {
-            font-size: 9px;
-            line-height: 1.0;
+        body {
+            padding-top: 4.5rem;
         }
     </style>
 </head>
@@ -120,30 +119,32 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
     // call the initial timer function, with the cb, how many iterations we want (30 seconds), and what the duration between iterations is (1 second)
     window.onload = timerInit(doer, 60, 1);
 </script>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">MinerStats</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Stats</a></li>
-            </ul>
-            <ul class="nav navbar-nav pull-right">
-                <li>
-                    <a id="timer" class="nav">60</a>
-                </li>
-            </ul>
-        </div><!--/.nav-collapse -->
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">MiningPoolStats</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active"><a class="nav-link" href="#">Stats</a></li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#how_to_use">How To Use</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#changelog">Changelog</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#about_donate">About/Donate</a>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav pull-right">
+            <li class="nav-item">
+                <a id="timer" class="nav-link">60</a>
+            </li>
+        </ul>
     </div>
 </nav>
-<div class="container"><br><br><br><br><br>
+<main role="main" class="container">
     <h1>MiningPoolHub Stats</h1>
     <div class="row">
         <div class="col-md-12">
@@ -174,22 +175,22 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
 									} ?> ><?php echo $coin->coin; ?></span></a></td>
                         <td><?php echo $coin->confirmed; ?><?php echo " (" . number_format(100 * $coin->confirmed / $mph_stats->all_coins->{$coin->coin}->min_payout, 0) . "%)"; ?></td>
                         <td <?php if (array_key_exists($coin->coin, $mph_stats->get_min_payout($coin->coin))) {
-							echo 'class="info"';
+							echo 'class="table-info"';
 						} ?>><?php echo $coin->unconfirmed; ?></td>
                         <td <?php if (array_key_exists($coin->coin, $mph_stats->get_min_payout($coin->coin))) {
-							echo 'class="info"';
+							echo 'class="table-info"';
 						} ?>><?php echo number_format($coin->confirmed + $coin->unconfirmed, $crypto_decimals); ?></td>
                         <td <?php if ($coin->unconfirmed_value > 0) {
-							echo 'class="success"';
+							echo 'class="table-success"';
 						} ?>><?php echo number_format($coin->confirmed_value_c + $coin->unconfirmed_value_c, 8) . " " . $crypto; ?></td>
                         <td <?php if ($coin->confirmed_value > 0) {
-							echo 'class="success"';
+							echo 'class="table-success"';
 						} ?>><?php echo number_format($coin->confirmed_value, $crypto_decimals) . " " . $fiat; ?></td>
                         <td <?php if ($coin->unconfirmed_value > 0) {
-							echo 'class="success"';
+							echo 'class="table-success"';
 						} ?>><?php echo number_format($coin->unconfirmed_value, $crypto_decimals) . " " . $fiat; ?></td>
                         <td <?php if ($coin->unconfirmed_value > 0) {
-							echo 'class="success"';
+							echo 'class="table-success"';
 						} ?>><?php echo number_format($coin->confirmed_value + $coin->unconfirmed_value, $crypto_decimals) . " " . $fiat; ?></td>
                     </tr>
 					<?php
@@ -234,4 +235,138 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
             </table>
         </div>
     </div>
+</main>
+<div class="modal fade" id="about_donate" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">About / How to Donate</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2>&copy; <?php echo date("Y"); ?> Mindbrite LLC</h2>
+                Thank you for your support. If you would like to donate to project to help assist with domain/server/etc. costs, you can do so at the following addresses:
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">BTC</span>
+                    <input type="text" class="form-control" value="17ZjS6ZJTCNWrd17kkZpgRHYZJjkq5qT5A" aria-describedby="basic-addon1" disabled>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">LTC</span>
+                    <input type="text" class="form-control" value="LdGQgurUKH2J7iBBPcXWyLKUb8uUgXCfFF" aria-describedby="basic-addon1" disabled>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">ETH</span>
+                    <input type="text" class="form-control" value="0x6e259a08a1596653cbf66b2ae2c36c46ca123523" aria-describedby="basic-addon1" disabled>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="changelog" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Changelog</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2>Changes 12/12/2017</h2>
+                <ul>
+                    <li>Added Changelog</li>
+                    <li>Changed payout color to three colors (green, orange and red based on percentage of threshold</li>
+                </ul>
+                <br><br>
+                <h4>See <a href="#" data-toggle="modal" data-target="#how_to_use">How To Use</a> for more info.</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="how_to_use" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">How to Use</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="accordion" role="tablist">
+                    <div class="card">
+                        <div class="card-header" role="tab" id="headingOne">
+                            <h5 class="mb-0">
+                                <a class="collapsed" data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    How can I view stats in alternate currencies? (USD,GBP,CAD) or in crypto-currenies?
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapseOne" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                MiningPoolStats supports most available currences and cryptocurrencies. If you would like to view an alternate currency, you can by modifying the URL<br>
+                                For example:<br>
+                                <br><br>
+                                For USD:
+                                <a href="//<?php echo $_SERVER['HTTP_HOST']; ?>/minerstats.php?fiat=USD&api_key=<?php echo $api_key; ?>"><?php echo $_SERVER['HTTP_HOST']; ?>/minerstats.php?fiat=USD&api_key=<?php echo $api_key; ?></a><br>
+                                For GBP:
+                                <a href="//<?php echo $_SERVER['HTTP_HOST']; ?>/minerstats.php?fiat=GBP&api_key=<?php echo $api_key; ?>"><?php echo $_SERVER['HTTP_HOST']; ?>/minerstats.php?fiat=GBP&api_key=<?php echo $api_key; ?></a><br>
+                                For BTC:
+                                <a href="//<?php echo $_SERVER['HTTP_HOST']; ?>/minerstats.php?fiat=BTC&api_key=<?php echo $api_key; ?>"><?php echo $_SERVER['HTTP_HOST']; ?>/minerstats.php?fiat=BTC&api_key=<?php echo $api_key; ?></a><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" role="tab" id="headingTwo">
+                            <h5 class="mb-0">
+                                <a class="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    What does it mean when a coin is in green, orange, or red text?
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <div class="card-body">
+                                We have implemented some recommended values for coins in order to prevent keeping too much in the pool wallet.<br>
+                                <br>
+                                <span style="font-weight: bold; color: green;">GREEN</span>: This means that you have reached the minimum payout threshold and you can "cash out" if you want to.<br>
+                                <br>
+                                <span style="font-weight: bold; color: orange;">ORANGE</span>: This means that you are at 5x the minimum payout and you should consider saving your funds to a local wallet soon.<br>
+                                <br>
+                                <span style="font-weight: bold; color: red;">RED</span>: This means that you are at 20x the minimum payout and you are probably holding too many coins in an online wallet. You should move coins to a local wallet ASAP.
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" role="tab" id="headingThree">
+                            <h5 class="mb-0">
+                                <a class="collapsed" data-toggle="collapse" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    What is the percentage next to the confirmed value for a coin?
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree" data-parent="#accordion">
+                            <div class="card-body">
+                                The percentage next to the coin name indicates how many percent of the minimum payout you have. Once it hits 100% you can "cash out" your coins.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.bundle.min.js" integrity="sha384-3ziFidFTgxJXHMDttyPJKDuTlmxJlwbSkojudK/CkRqKDOmeSbN6KLrGdrBQnT2n" crossorigin="anonymous"></script>
 </body>
