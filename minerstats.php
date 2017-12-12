@@ -166,12 +166,12 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
                     <tr>
                         <td>
                             <a target="_blank" href="https://<?php echo $coin->coin; ?>.miningpoolhub.com/index.php?page=account&action=pooledit"><span
-									<?php if ($coin->confirmed >= $mph_stats->all_coins->{$coin->coin}->min_payout) {
-										echo 'style="font-weight: bold; color: green;"';
+									<?php if ($coin->confirmed >= $mph_stats->all_coins->{$coin->coin}->min_payout * 20) {
+										echo 'style="font-weight: bold; color: red;"';
 									} else if ($coin->confirmed >= $mph_stats->all_coins->{$coin->coin}->min_payout * 5) {
 										echo 'style="font-weight: bold; color: orange;"';
-									} else if ($coin->confirmed >= $mph_stats->all_coins->{$coin->coin}->min_payout * 20) {
-										echo 'style="font-weight: bold; color: red;"';
+									} else if ($coin->confirmed >= $mph_stats->all_coins->{$coin->coin}->min_payout) {
+										echo 'style="font-weight: bold; color: green;"';
 									} ?> ><?php echo $coin->coin; ?></span></a></td>
                         <td><?php echo $coin->confirmed; ?><?php echo " (" . number_format(100 * $coin->confirmed / $mph_stats->all_coins->{$coin->coin}->min_payout, 0) . "%)"; ?></td>
                         <td <?php if (array_key_exists($coin->coin, $mph_stats->get_min_payout($coin->coin))) {
