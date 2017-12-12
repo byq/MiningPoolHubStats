@@ -33,6 +33,8 @@ class miningpoolhubstats
 	public $unconfirmed_total = 0;
 	public $confirmed_total_c = 0;
 	public $unconfirmed_total_c = 0;
+	public $payout_last_24_total = 0;
+	public $hourly_estimate_total = 0;
 
 	private $crypto_prices = null;
 	private $crypto_api_coin_list = null;
@@ -105,6 +107,20 @@ class miningpoolhubstats
 	{
 		$this->full_coin_list = $this->make_api_call("https://miningpoolhub.com/index.php?page=api&action=getuserallbalances&api_key=" . $this->api_key);
 
+		foreach ($this->full_coin_list->getuserallbalances->data as $coin) {
+			$dashboard_data = $this->get_dashboard($coin->coin);
+
+			$coin->hashrate = $dashboard_data->getdashboarddata->data->personal->hashrate;
+			$coin->payout_last_24 = $dashboard_data->getdashboarddata->data->recent_credits_24hours->amount;
+			$coin->block_time = $dashboard_data->getdashboarddata->data->network->esttimeperblock;
+			$coin->estimated_earnings = $dashboard_data->getdashboarddata->data->personal->estimates->payout;
+		}
+
+	}
+
+	private function get_dashboard($coin)
+	{
+		return $this->make_api_call("https://" . $coin . ".miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=" . $this->api_key);
 	}
 
 	private function generate_worker_stats($coin)
@@ -136,6 +152,10 @@ class miningpoolhubstats
 			$coin->coin = $row->coin;
 			$coin->confirmed = number_format($row->confirmed + $row->ae_confirmed + $row->exchange, 8);
 			$coin->unconfirmed = number_format($row->unconfirmed + $row->ae_unconfirmed, 8);
+			$coin->total = number_format($row->confirmed + $row->ae_confirmed + $row->exchange + $row->unconfirmed + $row->ae_unconfirmed, 8);
+			$coin->payout_last_24 = number_format($row->payout_last_24, 8);
+			$coin->hourly_estimate = ((1440 / $row->block_time) * $row->estimated_earnings);
+			$coin->hashrate = $row->hashrate;
 
 
 			//If a conversion rate was returned by API, set it
@@ -154,6 +174,15 @@ class miningpoolhubstats
 			$coin->confirmed_value_c = $cprice * ($row->confirmed + $row->ae_confirmed + $row->exchange);
 			$coin->unconfirmed_value_c = $cprice * ($row->unconfirmed + $row->ae_unconfirmed);
 
+
+			//Get fiat prices
+			$price = $this->crypto_prices->{$code}->{$this->fiat};
+
+			$coin->confirmed_value = $price * ($row->confirmed + $row->ae_confirmed + $row->exchange);
+			$coin->unconfirmed_value = $price * ($row->unconfirmed + $row->ae_unconfirmed);
+			$coin->total_value = $price * ($row->confirmed + $row->ae_confirmed + $row->exchange + $row->unconfirmed + $row->ae_unconfirmed);
+			$coin->payout_last_24_value = $row->payout_last_24 * $price;
+			$coin->hourly_estimate_value = $coin->hourly_estimate * $price;
 
 			//Add the coin data into the main array we build the table with
 			$this->coin_data[] = $coin;
@@ -184,6 +213,12 @@ class miningpoolhubstats
 			if ($coin_datum->unconfirmed_value_c > 0) {
 				$this->unconfirmed_total_c += $coin_datum->unconfirmed_value_c;
 			}
+			if ($coin_datum->payout_last_24_value > 0) {
+				$this->payout_last_24_total += $coin_datum->payout_last_24_value;
+			}
+			if ($coin_datum->hourly_estimate_value > 0) {
+				$this->hourly_estimate_total += $coin_datum->hourly_estimate_value;
+			}
 		}
 
 	}
@@ -213,6 +248,20 @@ class miningpoolhubstats
 		}
 
 		return $decimal;
+	}
+
+	public function daily_stats()
+	{
+		return (number_format($this->payout_last_24_total, $this->get_decimal_for_conversion()));
+
+	}
+
+
+	function perform_estimate()
+	{
+		$hours = number_format((time() - strtotime($this->stats_time)) / (3600), 2);
+		$this->minutes = number_format($hours * 60);
+		return (number_format($this->delta_total / $hours, $this->get_decimal_for_conversion()));
 	}
 
 
