@@ -149,7 +149,8 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
     <h3>24 Hr Earnings: <?php echo $mph_stats->daily_stats() . " " . $fiat; ?></h3>
     <div class="row">
         <div class="col-md-12">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped" cellspacing="0" id="wallet_table">
+                <thead>
                 <tr>
                     <th>Coin</th>
                     <th>Confirmed (% of min payout)</th>
@@ -159,10 +160,12 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
                     <th>Hash Rate</th>
                     <th>Hourly Estimate</th>
                 </tr>
-		        <?php
+                </thead>
+                <tbody>
+				<?php
 
-		        foreach ($mph_stats->coin_data as $coin) {
-			        ?>
+				foreach ($mph_stats->coin_data as $coin) {
+					?>
                     <tr>
                         <td>
                             <span <?php if ($coin->confirmed >= $mph_stats->all_coins->{$coin->coin}->min_payout * 20) {
@@ -173,32 +176,34 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
 	                            echo 'style="font-weight: bold; color: green;"';
                             } ?>><?php echo $coin->coin; ?></span></td>
                         <td <?php if ($coin->confirmed_value > 0) {
-					        echo 'class="table-success"';
-				        } ?>><?php echo $coin->confirmed; ?><?php echo " (" . number_format(100 * $coin->confirmed / $mph_stats->all_coins->{$coin->coin}->min_payout, 0) . "%)"; ?>
+							echo 'class="table-success"';
+						} ?>><?php echo $coin->confirmed; ?><?php echo " (" . number_format(100 * $coin->confirmed / $mph_stats->all_coins->{$coin->coin}->min_payout, 0) . "%)"; ?>
                             <br><?php echo number_format($coin->confirmed_value, $mph_stats->get_decimal_for_conversion()) . " " . $fiat; ?>
                         </td>
                         <td <?php if ($coin->unconfirmed_value > 0) {
-					        echo 'class="table-success"';
-				        } ?>><?php echo $coin->unconfirmed; ?>
+							echo 'class="table-success"';
+						} ?>><?php echo $coin->unconfirmed; ?>
                             <br><?php echo number_format($coin->unconfirmed_value, $mph_stats->get_decimal_for_conversion()) . " " . $fiat; ?>
                         </td>
                         <td <?php if ($coin->payout_last_24 > 0) {
-					        echo 'class="table-success"';
-				        }; ?>><?php echo $coin->payout_last_24; ?>
+							echo 'class="table-success"';
+						}; ?>><?php echo $coin->payout_last_24; ?>
                             <br>(<?php echo number_format($coin->payout_last_24_value, $mph_stats->get_decimal_for_conversion()) . " " . $fiat; ?>)
                         </td>
                         <td <?php if ($coin->total_value > 0) {
-					        echo 'class="table-success"';
-				        } ?>><b><?php echo $coin->total; ?>
+							echo 'class="table-success"';
+						} ?>><b><?php echo $coin->total; ?>
                                 <br><?php echo number_format($coin->total_value, $mph_stats->get_decimal_for_conversion()) . " " . $fiat; ?>
                             </b></td>
                         </td>
                         <td><?php echo number_format($coin->hashrate, 4); ?></td>
                         <td><?php echo number_format($coin->hourly_estimate_value, $mph_stats->get_decimal_for_conversion()) . " " . $fiat; ?></td>
                     </tr>
-			        <?php
-		        }
-		        ?>
+					<?php
+				}
+				?>
+                </tbody>
+                <tfoot>
                 <tr>
                     <td>TOTAL</td>
                     <td><?php echo number_format($mph_stats->confirmed_total, $mph_stats->get_decimal_for_conversion()) . " " . $fiat; ?></td>
@@ -227,12 +232,14 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
                         <br>Yearly
                     </td>
                 </tr>
+                </tfoot>
             </table>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped" cellspacing="0" id="worker_table">
+                <thead>
                 <tr>
                     <th>#</th>
                     <th>Worker</th>
@@ -240,6 +247,8 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
                     <th>Hashrate</th>
                     <th>Monitor</th>
                 </tr>
+                </thead>
+                <tbody>
 				<?php $i = 1;
 				foreach ($mph_stats->worker_data as $worker) { ?>
                     <tr>
@@ -253,6 +262,7 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
                     </tr>
 					<?php $i++;
 				} ?>
+                </tbody>
             </table>
         </div>
     </div>
@@ -391,4 +401,12 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
 </div>
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.bundle.min.js" integrity="sha384-3ziFidFTgxJXHMDttyPJKDuTlmxJlwbSkojudK/CkRqKDOmeSbN6KLrGdrBQnT2n" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script language="javascript">
+    $(document).ready(function () {
+        $('#wallet_table').DataTable();
+        $('#worker_table').DataTable();
+    });
+</script>
 </body>
