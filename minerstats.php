@@ -72,8 +72,28 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
     <link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet">
 
     <style>
+        html {
+            position: relative;
+            min-height: 100%;
+        }
+
         body {
             padding-top: 4.5rem;
+            margin-bottom: 60px; /* Margin bottom by footer height */
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px; /* Set the fixed height of the footer here */
+            line-height: 60px; /* Vertically center the text there */
+            background-color: #f5f5f5;
+        }
+
+        .footer > .container {
+            padding-right: 15px;
+            padding-left: 15px;
         }
     </style>
 </head>
@@ -271,6 +291,12 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
         </div>
     </div>
 </main>
+<footer class="footer">
+    <div class="container">
+        <span class="text-muted">If you feel like this site has helped you, please consider <a href="#" data-toggle="modal" data-target="#about_donate">donating</a> to help cover server/hosting costs. Thank you!  </span>
+        <span class="text-muted">  &copy; <?php echo date("Y"); ?> Mindbrite LLC.</span>
+    </div>
+</footer>
 <div class="modal fade" id="about_donate" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
