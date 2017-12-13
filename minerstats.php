@@ -151,6 +151,7 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
     <h3>24 Hr Earnings: <?php echo $mph_stats->daily_stats() . " " . $fiat; ?></h3>
     <div class="row">
         <div class="col-md-12">
+            <br><br>
             <table class="table table-bordered table-striped" cellspacing="0" id="wallet_table">
                 <thead>
                 <tr>
@@ -240,6 +241,7 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
     </div>
     <div class="row">
         <div class="col-md-12">
+            <br><br>
             <table class="table table-bordered table-striped" cellspacing="0" id="worker_table">
                 <thead>
                 <tr>
