@@ -80,6 +80,9 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
             padding-top: 4.5rem;
             margin-bottom: 60px; /* Margin bottom by footer height */
         }
+        .container {
+            width: 960px !important;
+        }
 
         .footer {
             position: absolute;

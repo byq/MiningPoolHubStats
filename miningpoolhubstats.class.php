@@ -70,7 +70,10 @@ class miningpoolhubstats
 			'zencash' => (object)array('code' => 'ZEN', 'min_payout' => '0.002'),
 			'litecoin' => (object)array('code' => 'LTC', 'min_payout' => '0.002'),
 			'monacoin' => (object)array('code' => 'MONA', 'min_payout' => '0.1'),
-			'groestlcoin' => (object)array('code' => 'GRS', 'min_payout' => '0.002')
+			'groestlcoin' => (object)array('code' => 'GRS', 'min_payout' => '0.002'),
+			'dash' => (object)array('code' => 'DASH', 'min_payout' => '0.1'),
+			'gamecredits' => (object)array('code' => 'GAME', 'min_payout' => '1.0'),
+			'verge-scrypt' => (object)array('code' => 'XVG', 'min_payout' => '0.15')
 		);
 	}
 
@@ -150,8 +153,9 @@ class miningpoolhubstats
 			$coin = (object)array();
 
 			$coin->coin = $row->coin;
-			$coin->confirmed = number_format($row->confirmed + $row->ae_confirmed + $row->exchange, 8);
-			$coin->unconfirmed = number_format($row->unconfirmed + $row->ae_unconfirmed, 8);
+			$coin->confirmed = number_format($row->confirmed, 8);
+			$coin->unconfirmed = number_format($row->unconfirmed, 8);
+			$coin->for_exchange = number_format($row->ae_confirmed + $row->exchange + $row->ae_unconfirmed, 8);
 			$coin->total = number_format($row->confirmed + $row->ae_confirmed + $row->exchange + $row->unconfirmed + $row->ae_unconfirmed, 8);
 			$coin->payout_last_24 = number_format($row->payout_last_24, 8);
 			$coin->hourly_estimate = ((1440 / $row->block_time) * $row->estimated_earnings);
