@@ -177,7 +177,7 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
             <table class="table table-bordered table-striped" cellspacing="0" id="wallet_table">
                 <thead>
                 <tr>
-                    <th>Coin</th>
+                    <th>Coin <br>(Price in <?php echo $fiat; ?>)[Price in <?php echo $crypto; ?>]</th>
                     <th>Confirmed (% of min payout)</th>
                     <th>Unconfirmed</th>
                     <th>Total</th>
@@ -199,7 +199,7 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
 	                            echo 'style="font-weight: bold; color: orange;"';
                             } else if ($coin->confirmed >= $mph_stats->all_coins->{$coin->coin}->min_payout) {
 	                            echo 'style="font-weight: bold; color: green;"';
-                            } ?>><?php echo $coin->coin; ?></span></td>
+                            } ?>><?php echo $coin->coin; ?><br>(<?php echo $coin->price; ?>)<br>[<?php echo $coin->cprice; ?>]</span></td>
                         <td <?php if ($coin->confirmed_value > 0) {
 							echo 'class="table-success"';
 						} ?> data-order="<?php echo $coin->confirmed_value; ?>"><?php echo $coin->confirmed; ?><?php echo " (" . number_format(100 * $coin->confirmed / $mph_stats->all_coins->{$coin->coin}->min_payout, 0) . "%)"; ?>
