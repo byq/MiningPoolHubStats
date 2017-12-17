@@ -74,6 +74,7 @@ class miningpoolhubstats
 			'dash' => (object)array('code' => 'DASH', 'min_payout' => '0.1'),
 			'gamecredits' => (object)array('code' => 'GAME', 'min_payout' => '1.0'),
 			'verge-scrypt' => (object)array('code' => 'XVG', 'min_payout' => '0.15'),
+			'electroneum' => (object)array('code' => 'ETN', 'min_payout' => '0.05'),
 			'zclassic' => (object)array('code' => 'ZCL', 'min_payout' => '0.002')
 		);
 	}
