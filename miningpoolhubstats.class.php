@@ -73,8 +73,7 @@ class miningpoolhubstats
 			'groestlcoin' => (object)array('code' => 'GRS', 'min_payout' => '0.002'),
 			'dash' => (object)array('code' => 'DASH', 'min_payout' => '0.1'),
 			'gamecredits' => (object)array('code' => 'GAME', 'min_payout' => '1.0'),
-			'verge-scrypt' => (object)array('code' => 'XVG', 'min_payout' => '0.15'),
-			'zclassic' => (object)array('code' => 'ZCL', 'min_payout' => '0.002')
+			'verge-scrypt' => (object)array('code' => 'XVG', 'min_payout' => '0.15')
 		);
 	}
 
@@ -168,10 +167,10 @@ class miningpoolhubstats
 			$code = $this->all_coins->{$row->coin}->code;
 
 			//Get fiat prices
-			$price = $this->crypto_prices->{$code}->{$this->fiat};
+//			$price = $this->crypto_prices->{$code}->{$this->fiat};
 
-			$coin->confirmed_value = $price * ($row->confirmed + $row->ae_confirmed + $row->exchange);
-			$coin->unconfirmed_value = $price * ($row->unconfirmed + $row->ae_unconfirmed);
+//			$coin->confirmed_value = $price * ($row->confirmed + $row->ae_confirmed + $row->exchange);
+//			$coin->unconfirmed_value = $price * ($row->unconfirmed + $row->ae_unconfirmed);
 
 			//get crypto prices
 			$cprice = $this->crypto_prices->{$code}->{$this->crypto};
@@ -188,6 +187,8 @@ class miningpoolhubstats
 			$coin->total_value = $price * ($row->confirmed + $row->ae_confirmed + $row->exchange + $row->unconfirmed + $row->ae_unconfirmed);
 			$coin->payout_last_24_value = $row->payout_last_24 * $price;
 			$coin->hourly_estimate_value = $coin->hourly_estimate * $price;
+			$coin->price = $price;
+			$coin->cprice = $cprice;
 
 			//Add the coin data into the main array we build the table with
 			$this->coin_data[] = $coin;
