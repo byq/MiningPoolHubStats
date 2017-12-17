@@ -73,7 +73,8 @@ class miningpoolhubstats
 			'groestlcoin' => (object)array('code' => 'GRS', 'min_payout' => '0.002'),
 			'dash' => (object)array('code' => 'DASH', 'min_payout' => '0.1'),
 			'gamecredits' => (object)array('code' => 'GAME', 'min_payout' => '1.0'),
-			'verge-scrypt' => (object)array('code' => 'XVG', 'min_payout' => '0.15')
+			'verge-scrypt' => (object)array('code' => 'XVG', 'min_payout' => '0.15'),
+			'zclassic' => (object)array('code' => 'ZCL', 'min_payout' => '0.002')
 		);
 	}
 
