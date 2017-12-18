@@ -26,8 +26,12 @@ class miningpoolhubstats
 	public $api_key = null;
 	public $fiat = null;
 	public $crypto = null;
+	public $ae_coin = null;
 	public $coin_data = array();
 	public $worker_data = array();
+
+	public $ae_balance = 0;
+	public $ae_balance_fiat = 0;
 
 	public $confirmed_total = 0;
 	public $unconfirmed_total = 0;
@@ -42,11 +46,12 @@ class miningpoolhubstats
 
 	public $all_coins = null;
 
-	public function __construct($api_key, $fiat, $crypto)
+	public function __construct($api_key, $fiat, $crypto, $ae_coin)
 	{
 		$this->api_key = $api_key;
 		$this->fiat = $fiat;
 		$this->crypto = $crypto;
+		$this->ae_coin = $ae_coin;
 		$this->init_all_coins();
 		$this->execute();
 	}
@@ -73,7 +78,8 @@ class miningpoolhubstats
 			'groestlcoin' => (object)array('code' => 'GRS', 'min_payout' => '0.002'),
 			'dash' => (object)array('code' => 'DASH', 'min_payout' => '0.1'),
 			'gamecredits' => (object)array('code' => 'GAME', 'min_payout' => '1.0'),
-			'verge-scrypt' => (object)array('code' => 'XVG', 'min_payout' => '0.15')
+			'verge-scrypt' => (object)array('code' => 'XVG', 'min_payout' => '0.15'),
+			'zclassic' => (object)array('code' => 'ZCL', 'min_payout' => '0.001')
 		);
 	}
 
@@ -166,8 +172,23 @@ class miningpoolhubstats
 
 			$code = $this->all_coins->{$row->coin}->code;
 
-			//Get fiat prices
-			$price = $this->crypto_prices->{$code}->{$this->fiat};
+			if ($code)
+			{
+				$price = $this->crypto_prices->{$code}->{$this->fiat};
+			}	
+			else
+			{
+				echo "Unknown Coin Code: " . $code;
+				continue;
+			}
+
+			// Check for Auto Exchange
+			if ($code == $this->ae_coin)
+			{
+				$this->ae_balance = $row->confirmed;
+				$this->ae_balance_fiat = $price * $row->confirmed;
+				continue;
+			}
 
 			$coin->confirmed_value = $price * ($row->confirmed + $row->ae_confirmed + $row->exchange);
 			$coin->unconfirmed_value = $price * ($row->unconfirmed + $row->ae_unconfirmed);
@@ -252,6 +273,16 @@ class miningpoolhubstats
 		}
 
 		return $decimal;
+	}
+
+	public function print_ae_balance()
+	{ 
+		if ($this->ae_coin)
+		{
+			$decimalized_fiat = number_format($this->ae_balance_fiat, $this->get_decimal_for_conversion());
+			return ($this->ae_balance ." " . $this->ae_coin . " (" . $decimalized_fiat . " " .$this->fiat . ")");
+		}
+		else return "";
 	}
 
 	public function daily_stats()
