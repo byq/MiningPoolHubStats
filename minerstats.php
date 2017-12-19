@@ -52,7 +52,15 @@ if ($crypto == "SET_CRYPTO_CODE_HERE" || strlen($crypto) >= 5) {
 	$crypto = "ETH";
 }
 
-$mph_stats = new miningpoolhubstats($api_key, $fiat, $crypto);
+//Check to see what we are converting to. Default to BTC
+if ($_GET['ae_coin'] != null) {
+    $ae_coin = filter_var($_GET['ae_coin'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+}
+if ($ae_coin == "SET_AUTO_EXCHANGE_COIN_HERE" || strlen($ae_coin) >= 5) {
+    $ae_coin = null;
+}
+
+$mph_stats = new miningpoolhubstats($api_key, $fiat, $crypto, $ae_coin);
 $crypto_decimals = $mph_stats->get_decimal_for_conversion();
 
 
@@ -170,7 +178,9 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
 </nav>
 <main role="main" class="container">
     <h1>MiningPoolHub Stats</h1>
-    <h3>24 Hr Earnings: <?php echo $mph_stats->daily_stats() . " " . $fiat; ?></h3>
+    <h4>24 Hr Earnings: <?php echo $mph_stats->daily_stats(); ?></h3>
+    <h4>Auto Exchanged Balance: <A target="_blank" HREF="https://miningpoolhub.com/?page=account&action=balances">  <?php echo $mph_stats->print_ae_balance(); ?>
+    </A></h3>
     <div class="row">
         <div class="col-md-12">
             <br><br>
@@ -296,7 +306,7 @@ $crypto_decimals = $mph_stats->get_decimal_for_conversion();
 <footer class="footer">
     <div class="container">
         <span class="text-muted">If you feel like this site has helped you, please consider <a href="#" data-toggle="modal" data-target="#about_donate">donating</a> to help cover server/hosting costs. Thank you!  </span>
-        <span class="text-muted">  &copy; <?php echo date("Y"); ?> Mindbrite LLC.</span>
+        <span class="text-muted">  &copy; <?php date_default_timezone_set('UTC'); echo date("Y"); ?> Mindbrite LLC.</span>
     </div>
 </footer>
 <div class="modal fade" id="about_donate" tabindex="-1" role="dialog" aria-hidden="true">
