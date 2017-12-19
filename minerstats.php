@@ -29,31 +29,31 @@ require_once("miningpoolhubstats.class.php");
 
 
 //Check to see we have an API key. Show an error if none is defined.
-if ($_GET['api_key'] != null) {
+if (isset($_GET['api_key'])) {
 	$api_key = filter_var($_GET['api_key'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 }
 if ($api_key == null || $api_key == "INSERT_YOUR_API_KEY_HERE" || strlen($api_key) <= 32) {
 	die("Please enter an API key: example: " . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?api_key=ENTER_YOUR_KEY_HERE");
 }
 
-//Check to see what we are converting to. Default to USD
-if ($_GET['fiat'] != null) {
+//Check to see what we are converting to. Default to USD.
+if (isset($_GET['fiat'])) {
 	$fiat = filter_var($_GET['fiat'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 }
 if ($fiat == "SET_FIAT_CODE_HERE" || strlen($fiat) >= 4) {
 	$fiat = "USD";
 }
 
-//Check to see what we are converting to. Default to BTC
-if ($_GET['crypto'] != null) {
+//Check to see what we are converting to. Default to ETH.
+if (isset($_GET['crypto'])) {
 	$crypto = filter_var($_GET['crypto'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 }
 if ($crypto == "SET_CRYPTO_CODE_HERE" || strlen($crypto) >= 5) {
 	$crypto = "ETH";
 }
 
-//Check to see what we are converting to. Default to BTC
-if ($_GET['ae_coin'] != null) {
+//Check to see what we are converting to. Default to empty.
+if (isset($_GET['ae_coin'])) {
     $ae_coin = filter_var($_GET['ae_coin'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
 }
 if ($ae_coin == "SET_AUTO_EXCHANGE_COIN_HERE" || strlen($ae_coin) >= 5) {
@@ -63,6 +63,10 @@ if ($ae_coin == "SET_AUTO_EXCHANGE_COIN_HERE" || strlen($ae_coin) >= 5) {
 $mph_stats = new miningpoolhubstats($api_key, $fiat, $crypto, $ae_coin);
 $crypto_decimals = $mph_stats->get_decimal_for_conversion();
 
+if (empty($render_html)) {
+	//Place your code here if you wish to process API data w/o web-page rendering.
+	exit(0);
+}
 
 //GENERATE THE UI HERE
 ?>
