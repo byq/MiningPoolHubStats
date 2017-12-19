@@ -287,8 +287,14 @@ class miningpoolhubstats
 
 	public function daily_stats()
 	{
-		return (number_format($this->payout_last_24_total, $this->get_decimal_for_conversion()));
-
+		$daily_reward = number_format($this->payout_last_24_total, $this->get_decimal_for_conversion());
+		if ($this->ae_coin)
+		{
+			$price = $this->crypto_prices->{$this->ae_coin}->{$this->fiat};
+			return (number_format($this->payout_last_24_total/$price,8) . " " . $this->ae_coin . " (" . $daily_reward . " " . $this->fiat . ")");
+		}
+		else
+			return (($daily_reward) . " " . $this->fiat);
 	}
 
 
