@@ -26,8 +26,12 @@ class miningpoolhubstats
 	public $api_key = null;
 	public $fiat = null;
 	public $crypto = null;
+	public $ae_coin = null;
 	public $coin_data = array();
 	public $worker_data = array();
+
+	public $ae_balance = 0;
+	public $ae_balance_fiat = 0;
 
 	public $confirmed_total = 0;
 	public $unconfirmed_total = 0;
@@ -42,11 +46,12 @@ class miningpoolhubstats
 
 	public $all_coins = null;
 
-	public function __construct($api_key, $fiat, $crypto)
+	public function __construct($api_key, $fiat, $crypto, $ae_coin)
 	{
 		$this->api_key = $api_key;
 		$this->fiat = $fiat;
 		$this->crypto = $crypto;
+		$this->ae_coin = $ae_coin;
 		$this->init_all_coins();
 		$this->execute();
 	}
@@ -55,6 +60,7 @@ class miningpoolhubstats
 	{
 		$this->all_coins = (object)array(
 			'bitcoin' => (object)array('code' => 'BTC', 'min_payout' => '0.002'),
+			'electroneum' => (object)array('code' => 'ETN', 'min_payout' => '0.05'),
 			'ethereum' => (object)array('code' => 'ETH', 'min_payout' => '0.01'),
 			'monero' => (object)array('code' => 'XMR', 'min_payout' => '0.05'),
 			'zcash' => (object)array('code' => 'ZEC', 'min_payout' => '0.002'),
@@ -166,10 +172,25 @@ class miningpoolhubstats
 
 			//If a conversion rate was returned by API, set it
 
-			$code = $this->all_coins->{$row->coin}->code;
+			$code = property_exists($this->all_coins, $row->coin) ? $this->all_coins->{$row->coin}->code : null;
 
-			//Get fiat prices
-//			$price = $this->crypto_prices->{$code}->{$this->fiat};
+			if ($code)
+			{
+				$price = $this->crypto_prices->{$code}->{$this->fiat};
+			}
+			else
+			{
+				echo "Unknown Coin Code: " . $row->coin . "<br>\n";
+				continue;
+			}
+
+			// Check for Auto Exchange
+			if ($code == $this->ae_coin)
+			{
+				$this->ae_balance = $row->confirmed;
+				$this->ae_balance_fiat = $price * $row->confirmed;
+				continue;
+			}
 
 //			$coin->confirmed_value = $price * ($row->confirmed + $row->ae_confirmed + $row->exchange);
 //			$coin->unconfirmed_value = $price * ($row->unconfirmed + $row->ae_unconfirmed);
@@ -258,10 +279,26 @@ class miningpoolhubstats
 		return $decimal;
 	}
 
+	public function print_ae_balance()
+	{
+		if ($this->ae_coin)
+		{
+			$decimalized_fiat = number_format($this->ae_balance_fiat, $this->get_decimal_for_conversion());
+			return ($this->ae_balance ." " . $this->ae_coin . " (" . $decimalized_fiat . " " .$this->fiat . ")");
+		}
+		else return "";
+	}
+
 	public function daily_stats()
 	{
-		return (number_format($this->payout_last_24_total, $this->get_decimal_for_conversion()));
-
+		$daily_reward = number_format($this->payout_last_24_total, $this->get_decimal_for_conversion());
+		if ($this->ae_coin)
+		{
+			$price = $this->crypto_prices->{$this->ae_coin}->{$this->fiat};
+			return (number_format($this->payout_last_24_total/$price,8) . " " . $this->ae_coin . " (" . $daily_reward . " " . $this->fiat . ")");
+		}
+		else
+			return (($daily_reward) . " " . $this->fiat);
 	}
 
 
