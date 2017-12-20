@@ -1,13 +1,13 @@
 This is a simple stats page which will show your current confirmed and unconfirmed coins, their balance in USD, and your current workers on MiningPoolHub.com
 
 **INSTALLATION**
-
+* Make sure you have curl extension for PHP installed, otherwise install it executing `apt install php5-curl` (for a Debian/Ubuntu system running PHP5). To ensure that curl extension is loaded restart apache with `service apache2 restart`.
 * Copy minerstats.php, miningpoolhubstats.class.php and config.php into your web space.
 * Update config.php to include your API key, selected FIAT currency for conversion and selected crypto for conversion
 * open /minerstats.php in a browser
 
 Note: You can also pass the information via GET, for example:
- 
+
 _example: minerstats.php?api_key=THIS_IS_MY_API_KEY_&amp;fiat=FIAT_CURRENCY_CODE
 
 **Please make sure to only edit the config.php file!**

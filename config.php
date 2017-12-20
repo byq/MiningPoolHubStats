@@ -31,5 +31,8 @@ $fiat = "SET_FIAT_CODE_HERE";
 $crypto = "SET_CRYPTO_CODE_HERE";
 
 //If Auto Exchanging, set the coin (BTC, ETH, LTC, etc) here
-$ae_coin = "SET_AUTO_EXCHANGE_COIN_HERE"
+$ae_coin = "SET_AUTO_EXCHANGE_COIN_HERE";
+
+//Render web-page presentation
+$render_html = true;
 ?>

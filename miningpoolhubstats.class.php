@@ -170,15 +170,15 @@ class miningpoolhubstats
 
 			//If a conversion rate was returned by API, set it
 
-			$code = $this->all_coins->{$row->coin}->code;
+			$code = property_exists($this->all_coins, $row->coin) ? $this->all_coins->{$row->coin}->code : null;
 
 			if ($code)
 			{
 				$price = $this->crypto_prices->{$code}->{$this->fiat};
-			}	
+			}
 			else
 			{
-				echo "Unknown Coin Code: " . $code;
+				echo "Unknown Coin Code: " . $row->coin . "<br>\n";
 				continue;
 			}
 
@@ -276,7 +276,7 @@ class miningpoolhubstats
 	}
 
 	public function print_ae_balance()
-	{ 
+	{
 		if ($this->ae_coin)
 		{
 			$decimalized_fiat = number_format($this->ae_balance_fiat, $this->get_decimal_for_conversion());
