@@ -60,6 +60,7 @@ class miningpoolhubstats
 	{
 		$this->all_coins = (object)array(
 			'bitcoin' => (object)array('code' => 'BTC', 'min_payout' => '0.002'),
+			'electroneum' => (object)array('code' => 'ETN', 'min_payout' => '0.05'),
 			'ethereum' => (object)array('code' => 'ETH', 'min_payout' => '0.01'),
 			'monero' => (object)array('code' => 'XMR', 'min_payout' => '0.05'),
 			'zcash' => (object)array('code' => 'ZEC', 'min_payout' => '0.002'),
